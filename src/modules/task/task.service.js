@@ -1,51 +1,24 @@
-const userModel = require("../../models/task");
-const pager = require("../../utils/pager");
+const taskModel = require('../../models/task');
 
-async function createIfNotExists(decoded, response) {
-    let task = await findOne(decoded.email)
-    if(!task){
-        user = {name:decoded.given_name, description: decoded.family_name ,resume:decoded.email}
-        await save(user)
-    }
-    return user   
-
-}
-async function findOneById(_id){
-  return await userModel.findById(_id).exec()
-}
-async function findOne(email){
-    return await userModel.findOne({email:email}).exec()
+async function findAll() {
+    return await taskModel.find().populate('user').exec();
 }
 
-async function save(user){
-    let _user = new userModel(user)  
-    return await _user.save()
+async function findOneById(_id) {
+    return await taskModel.findById(_id).populate('user').exec();
 }
 
-async function paginated(params) {
-    let perPage = params.perPage?params.perPage:10, page = Math.max(0, params.page)
-    let filter = params.filter?params.filter:{}
-    let sort = params.sort?params.sort:{}
-  
-    let count = await userModel.countDocuments(filter)
-    let data = await userModel.find(filter)
-      .limit(perPage)
-      .skip(perPage * page)
-      .sort(sort)
+async function save(task) {
+    let _task = new taskModel(task);
+    return await _task.save();
+}
 
-      .exec();
-  
-    return pager.createPager(page,data,count,perPage)
-  }
-  
-async function update(id, updatedUser) {
-    return await userModel.findByIdAndUpdate(id, updatedUser, { new: true }).exec();
-  }
-  
+async function update(id, updatedTask) {
+    return await taskModel.findByIdAndUpdate(id, updatedTask, { new: true }).populate('user').exec();
+}
+
 async function remove(id) {
-      return await userModel.findOneAndDelete({ _id: id }).exec();
-  }
-  
+    return await taskModel.findOneAndDelete({ _id: id }).exec();
+}
 
-
-module.exports = { createIfNotExists,findOneById, findOne, save, paginated, update, remove };
+module.exports = { findAll, findOneById, save, update, remove };
