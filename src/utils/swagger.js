@@ -14,6 +14,7 @@ const routes = [
   
 
   "src/modules/user/user.routes.js",
+  "src/modules/task/task.routes.js"
 ];
 
 swaggerAutogen(outputFile, routes, doc);
