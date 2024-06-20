@@ -8,42 +8,21 @@ const swaggerDocument = require('./swagger-output.json');
 const usuarioRouter = require('./src/modules/user/user.routes');
 const taskRouter = require('./src/modules/task/task.routes');
 
-// Secure setup (descomentar si es necesario)
-const { expressjwt: jwt } = require('express-jwt');
-const jwksRsa = require('jwks-rsa');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 
 const app = express();
-const port = process.env.PORT || 3000;  // Aseguramos que el puerto tenga un valor por defecto
+const port = process.env.PORT || 6000;
 
 // Enable CORS
 app.use(cors());
 
 // Enable the use of request body parsing middleware
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({
-  extended: false
-}));
-
-/**
- * @swagger
- * /:
- *   get:
- *     description: Devuelve un mensaje de bienvenida
- *     responses:
- *       200:
- *         description: Mensaje de bienvenida
- */
-app.get("/", async (request, response) => {
-  return response.send("Backend reclamos node js express");
-});
+app.use(bodyParser.urlencoded({ extended: false }));
 
 // Conectar a la base de datos MongoDB
-mongoose.connect(process.env.DB_URL, { 
-  useNewUrlParser: true, 
-  useUnifiedTopology: true 
-});
+mongoose.connect(process.env.DB_URL, { useNewUrlParser: true, useUnifiedTopology: true });
 
 mongoose.connection.on('connected', () => {
   console.log('Conectado a la base de datos MongoDB');
@@ -51,6 +30,10 @@ mongoose.connection.on('connected', () => {
 
 mongoose.connection.on('error', (err) => {
   console.log('Error en la conexión a la base de datos:', err);
+});
+
+app.get("/", async (request, response) => {
+  return response.send("Backend reclamos node js express");
 });
 
 // Routers
@@ -67,10 +50,7 @@ app.all('*', (req, res, next) => {
   next();
 });
 
-var options = {
-  explorer: true
-};
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument, options));
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.listen(port, () => {
   console.log(`Sistema escuchando en el puerto ${port}.`);
