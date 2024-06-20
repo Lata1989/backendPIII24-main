@@ -206,19 +206,19 @@
       "properties": {
         "firstname": {
           "type": "string",
-          "example": "Juan"
+          "example": "John"
         },
         "lastname": {
           "type": "string",
-          "example": "Perez"
+          "example": "Doe"
         },
         "email": {
           "type": "string",
-          "example": "juanperez@ejemplo.com"
+          "example": "john.doe@example.com"
         },
         "domicilio": {
           "type": "string",
-          "example": "Calle 123"
+          "example": "123 Main St"
         },
         "celular": {
           "type": "string",
@@ -234,7 +234,7 @@
         },
         "area": {
           "type": "string",
-          "example": "desarrollo"
+          "example": "development"
         },
         "tasks": {
           "type": "array",
